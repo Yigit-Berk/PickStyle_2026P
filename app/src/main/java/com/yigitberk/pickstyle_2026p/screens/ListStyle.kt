@@ -1,10 +1,13 @@
 package com.yigitberk.pickstyle_2026p.screens
 
+import android.R
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
@@ -49,6 +52,19 @@ fun StyleList(modifier: Modifier = Modifier) {
                     modifier = Modifier.background(MaterialTheme.colorScheme.primary)
                         .fillMaxSize().padding(40.dp,60.dp)
                 ) {
+                    //tek bir item da eklenebiliyor:
+                    item {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                "Stillerim",
+                                style = MaterialTheme.typography.displayMedium,
+                                color = MaterialTheme.colorScheme.surface
+                            )
+                        }
+                    }
                     items(6) {
                         ListRow()
                     }
