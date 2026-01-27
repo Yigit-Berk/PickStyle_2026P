@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -65,14 +66,37 @@ fun StyleList(modifier: Modifier = Modifier) {
                             )
                         }
                     }
-                    items(6) {
-                        ListRow()
+                    var boyut = 0 // geçici değişken
+
+                    if(boyut > 0) {
+                        items(boyut) {
+                            ListRow()
+                        }
                     }
+                    else{
+                        item {
+                            EmptyText()
+                        }
+                    }
+
+
                 }
         }
 
     )
 
+}
+
+//kullanıcıyı bilgilendirme için
+@Composable
+fun EmptyText(){
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(
+            "Stil eklemek için \"+\" tuşuna basın ",
+            color = MaterialTheme.colorScheme.primaryContainer,
+            style = MaterialTheme.typography.headlineLarge
+        )
+    }
 }
 
 @Composable
