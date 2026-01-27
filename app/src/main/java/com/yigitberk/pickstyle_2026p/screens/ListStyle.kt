@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 
+/*Genel Liste Görünümü ve floating button*/
 @Composable
 fun StyleList(modifier: Modifier = Modifier) {
     Scaffold(
