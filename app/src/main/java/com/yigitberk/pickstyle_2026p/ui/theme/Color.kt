@@ -11,4 +11,4 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 /*custom renklerim*/
-val Purple41 = Color(0xFF997AFD)
+val Purple410 = Color(0xFF9B7CFF)
