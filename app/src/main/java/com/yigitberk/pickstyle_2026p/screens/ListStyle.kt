@@ -92,7 +92,7 @@ fun StyleList(modifier: Modifier = Modifier) {
 fun EmptyText(){
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
-            "Stil eklemek için \"+\" tuşuna basın ",
+            "Stil eklemek için \"+\" tuşuna dokunun",
             color = MaterialTheme.colorScheme.primaryContainer,
             style = MaterialTheme.typography.headlineLarge
         )
