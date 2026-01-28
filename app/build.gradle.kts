@@ -64,10 +64,15 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$room_version")
     // To use Kotlin annotation processing tool (kapt)
     ksp("androidx.room:room-compiler:$room_version")
+    
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
+    // ViewModel
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.10.0")
+    //Live Data
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.10.0")
+    // Lifecycles only (without ViewModel or LiveData)
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
+    // Lifecycle utilities for Compose
     implementation("io.coil-kt:coil-compose:2.7.0")
 }
