@@ -47,6 +47,10 @@ fun AddList(){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
+        Text(
+            "Stilini çekmek için dokun",
+            color = MaterialTheme.colorScheme.surface
+        )
         Image(
             contentDescription = "Fotoğraf Çek",
             painter = painterResource(R.drawable.take_photo),
