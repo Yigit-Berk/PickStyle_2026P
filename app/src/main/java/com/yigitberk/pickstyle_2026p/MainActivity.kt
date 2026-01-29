@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                      */
-                    StyleList(Modifier.padding(innerPadding))
+                    StyleList(emptyList(),Modifier.padding(innerPadding))
                 }
             }
         }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.DividerDefaults
@@ -29,12 +30,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 
 /*Genel Liste Görünümü ve floating button*/
 @Composable
-fun StyleList(modifier: Modifier = Modifier) {
+fun StyleList(itemList: List<Item>, modifier: Modifier = Modifier) {
     Scaffold(
         Modifier.background(MaterialTheme.colorScheme.primary)
             //.padding(40.dp,60.dp)
@@ -66,11 +68,11 @@ fun StyleList(modifier: Modifier = Modifier) {
                             )
                         }
                     }
-                    var boyut = 0 // geçici değişken
+                    //var boyut = 0 // geçici değişken
 
-                    if(boyut > 0) {
-                        items(boyut) {
-                            ListRow()
+                    if(itemList.count() > 0) {
+                        items(itemList) {
+                            ListRow(it)
                         }
                     }
                     else{
@@ -99,14 +101,14 @@ fun EmptyText(){
     }
 }
 
+//listedeki tek bir item görünümü
 @Composable
-fun ListRow(){
-
+fun ListRow(item: Item){
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         HorizontalDivider(thickness = 2.dp)//MaterialTheme component
         Text(
-            "Gece Kuşu",
+            text = item.itemName,
             color = MaterialTheme.colorScheme.surface,
             style = MaterialTheme.typography.displaySmall
         )
@@ -118,6 +120,6 @@ fun ListRow(){
 @Composable
 fun GreetingPreview() {
     PickStyle_2026PTheme {
-        StyleList()
+        StyleList(emptyList())
     }
 }

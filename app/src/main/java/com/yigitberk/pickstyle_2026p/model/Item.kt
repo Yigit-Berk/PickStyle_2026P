@@ -5,11 +5,12 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+
 @Entity
 class Item (
     //annotations
     @ColumnInfo("name")//style name (first screen)
-    var itemName: String?,
+    var itemName: String,
 
     @ColumnInfo("category") //Kategori
     var category: String?,
