@@ -58,16 +58,20 @@ class MainActivity : ComponentActivity() {
                                 val itemList by remember { // Hatırla
                                     viewModel.itemList
                                 }
-                                StyleList(itemList)
+                                StyleList(itemList, navController)
 
                             }
 
+                            /*ikinci ekleme ekranımız*/
+                            composable ("Add_Style_Screen"){
+
+                            }
                         }
 
                     }
 
-
-                    StyleList(emptyList())
+                    //test için
+                    //StyleList(emptyList())
                 }
             }
         }

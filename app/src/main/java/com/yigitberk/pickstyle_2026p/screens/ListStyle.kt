@@ -30,20 +30,23 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 
 /*Genel Liste Görünümü ve floating button*/
 @Composable
-fun StyleList(itemList: List<Item>) {
+fun StyleList(itemList: List<Item> , navController: NavController) {
     Scaffold(
         Modifier.background(MaterialTheme.colorScheme.primary)
             //.padding(40.dp,60.dp)
         ,topBar = {}
         ,floatingActionButtonPosition = FabPosition.End
         ,floatingActionButton = {
-            FloatingActionButton(onClick = {  }) {
+            FloatingActionButton(onClick = {
+                navController.navigate("Add_Style_Screen")//bu ekrana git
+            }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
@@ -120,6 +123,6 @@ fun ListRow(item: Item){
 @Composable
 fun GreetingPreview() {
     PickStyle_2026PTheme {
-        StyleList(emptyList())
+        //StyleList(emptyList())
     }
 }

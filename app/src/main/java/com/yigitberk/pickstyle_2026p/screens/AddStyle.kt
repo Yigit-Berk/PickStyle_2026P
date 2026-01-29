@@ -1,5 +1,6 @@
 package com.yigitberk.pickstyle_2026p.screens
 
+import android.net.Uri
 import android.widget.EditText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,22 +26,39 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yigitberk.pickstyle_2026p.R
+import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 @Composable
-fun AddList(){
+fun AddList(saveFunction: (item: Item) -> Unit){
+
+    //gelen veriyi hatırlamak için remember
+    val itemName = remember {
+        mutableStateOf("")
+    }
+    val categoryName = remember {
+        mutableStateOf("")
+    }
+    var selectedImageUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+    var context = LocalContext.current
+
     Column(
         modifier = Modifier.fillMaxSize().
         background(MaterialTheme.colorScheme.primary),
@@ -58,7 +76,7 @@ fun AddList(){
         )
         Spacer(Modifier.size(20.dp))
         TextField(
-            value = "",
+            value = itemName.value,
             onValueChange = { },
             placeholder = { Text("Stiline bir isim ver")},
             colors = TextFieldDefaults.colors (
@@ -78,6 +96,10 @@ fun AddList(){
 
 @Composable
 fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
+    var categoryName = remember {
+        mutableStateOf("")
+    }
+
     //Kategoriler
     val radioOptions = listOf("Gündelik","Sportif", "İş","Tatil","Minimalist")
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
@@ -102,7 +124,9 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
             ) {
                 RadioButton(
                     selected = (text == selectedOption),
-                    onClick = null, // null recommended for accessibility with screen readers
+                    onClick = {
+                        categoryName.value = text //seçimi hatırla
+                              }, // null recommended for accessibility with screen readers
                     colors = RadioButtonColors(
                         MaterialTheme.colorScheme.secondary,
                         MaterialTheme.colorScheme.surface,
