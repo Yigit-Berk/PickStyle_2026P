@@ -36,7 +36,7 @@ import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 /*Genel Liste Görünümü ve floating button*/
 @Composable
-fun StyleList(itemList: List<Item>, modifier: Modifier = Modifier) {
+fun StyleList(itemList: List<Item>) {
     Scaffold(
         Modifier.background(MaterialTheme.colorScheme.primary)
             //.padding(40.dp,60.dp)

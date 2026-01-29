@@ -7,5 +7,5 @@ import com.yigitberk.pickstyle_2026p.model.Item
 /*kısaca veritabanını oluşturduğumuz kısım*/
 @Database(entities = [Item::class], version = 1)
 abstract class ItemDatabase : RoomDatabase() {
-    abstract fun userDao(): ItemDAO
+    abstract fun itemDao(): ItemDAO
 }

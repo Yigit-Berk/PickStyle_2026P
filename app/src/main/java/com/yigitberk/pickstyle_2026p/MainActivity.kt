@@ -20,6 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
 import com.yigitberk.pickstyle_2026p.screens.StyleList
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
@@ -28,6 +30,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()//dependency eklendi
+
             PickStyle_2026PTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     /*
@@ -36,7 +40,15 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(innerPadding)
                     )
                      */
-                    StyleList(emptyList(),Modifier.padding(innerPadding))
+                    Box(Modifier.padding(innerPadding)){
+                        NavHost(navController, startDestination = "ListStyleName"){
+
+                        }
+
+                    }
+
+
+                    StyleList(emptyList())
                 }
             }
         }
