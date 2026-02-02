@@ -1,11 +1,15 @@
 package com.yigitberk.pickstyle_2026p.screens
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import android.widget.EditText
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -218,6 +222,17 @@ fun StyleCamera(modifier: Modifier = Modifier) {
     // Kameranın açık olup olmadığını kontrol eden state
     var showCamera by remember { mutableStateOf(false) }
 
+    // İzin istemek için launcher'ı tanımlarız
+    val permissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            showCamera = true // İzin verildiyse kamerayı aç
+        } else {
+            // Kullanıcı reddetti, burada bir Toast mesajı gösterebilirsin
+        }
+    }
+
     if (showCamera) {
         CameraView(
             onImageCaptured = {uri ->
@@ -239,7 +254,17 @@ fun StyleCamera(modifier: Modifier = Modifier) {
                     .border(5.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
                     .clickable {
                         // Tıklanınca kamerayı aç
-                        showCamera = true
+                        val permissionCheck = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.CAMERA
+                        )
+
+                        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+                            showCamera = true // İzin zaten varsa aç
+                        } else {
+                            permissionLauncher.launch(Manifest.permission.CAMERA) // Yoksa iste
+                        }
+                        //showCamera = true
                     },
                 contentScale = ContentScale.Crop
             )
