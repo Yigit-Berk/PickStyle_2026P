@@ -111,7 +111,9 @@ fun AddList(saveFunction: (item: Item) -> Unit){
         Spacer(Modifier.size(20.dp))
         TextField(
             value = itemName.value,
-            onValueChange = { },
+            onValueChange = {
+                itemName.value = it
+            },
             placeholder = { Text("Stiline bir isim ver")},
             colors = TextFieldDefaults.colors (
                 focusedContainerColor = Color.Transparent,
@@ -120,7 +122,8 @@ fun AddList(saveFunction: (item: Item) -> Unit){
                 unfocusedIndicatorColor = MaterialTheme.colorScheme.surface,
                 unfocusedTextColor = MaterialTheme.colorScheme.surfaceDim,
                 focusedPlaceholderColor = MaterialTheme.colorScheme.secondary,
-                unfocusedPlaceholderColor = MaterialTheme.colorScheme.secondary
+                unfocusedPlaceholderColor = MaterialTheme.colorScheme.secondary,
+                focusedTextColor = MaterialTheme.colorScheme.surface
             )
         )
         Spacer(Modifier.size(20.dp))
