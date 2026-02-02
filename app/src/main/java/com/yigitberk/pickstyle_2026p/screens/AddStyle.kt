@@ -1,7 +1,16 @@
 package com.yigitberk.pickstyle_2026p.screens
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import android.widget.EditText
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.collection.emptyObjectList
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -9,6 +18,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,10 +56,17 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil.compose.rememberAsyncImagePainter
 import com.yigitberk.pickstyle_2026p.R
 import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
+import java.io.ByteArrayOutputStream
+import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @Composable
 fun AddList(saveFunction: (item: Item) -> Unit){
@@ -60,10 +78,11 @@ fun AddList(saveFunction: (item: Item) -> Unit){
     val categoryName = remember {
         mutableStateOf("")
     }
-    var selectedImageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
+    //var photoToImageUri by remember { mutableStateOf<Uri?>(null) }
     var context = LocalContext.current
+
+    // Çekilen fotoğrafın URI'sini burada tutacağız
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     Column(
         modifier = Modifier.fillMaxSize().
@@ -105,6 +124,26 @@ fun AddList(saveFunction: (item: Item) -> Unit){
         Spacer(Modifier.size(20.dp))
 
         Button(border = BorderStroke(2.dp,MaterialTheme.colorScheme.surface),onClick = {
+
+            //yukarıda oluşturduğumuz selectedImage değişkenimiz
+            //bize bir context lazım olacağı (fonksiyonumuz resizeImage için) için yine yukarıda tanımladık
+            val imageByteArray = capturedImageUri?.let {
+                resizeImage(
+                    context = context,
+                    uri = it,
+                    maxWidth = 600,
+                    maxHeight = 400
+                )
+
+            } ?: ByteArray(0) // null ise boş bir byteArray oluştursun
+
+            val itemToInsert = Item(
+                itemName = itemName.value,
+                category = categoryName.value,
+                image = imageByteArray //değişkenimizi verdik boş byteArray yerine
+                //image = ByteArray(1) //boş byte array
+            )
+            saveFunction(itemToInsert)
 
         }) {
             Text("Kaydet")
@@ -180,7 +219,13 @@ fun StyleCamera(modifier: Modifier = Modifier) {
     var showCamera by remember { mutableStateOf(false) }
 
     if (showCamera) {
-        // (CameraPreview)
+        CameraView(
+            onImageCaptured = {uri ->
+                capturedImageUri = uri
+                showCamera = false //fotoğraf çekilince kamerayı kapat
+            },
+            onError = { Log.e("Camera","Hata: ${it.message}")}
+        )
     } else {
             Image(
                 painter = if (capturedImageUri != null) {
@@ -202,6 +247,128 @@ fun StyleCamera(modifier: Modifier = Modifier) {
     }
 }
 
+/*kamera ekranı için gerekli fonksiyonlar*/
+// Kamera sağlayıcısını asenkron olarak almak için
+suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
+    ProcessCameraProvider.getInstance(this).also { cameraProvider ->
+        cameraProvider.addListener({
+            continuation.resume(cameraProvider.get())
+        }, ContextCompat.getMainExecutor(this))
+    }
+}
+
+// Gerçek çekim işlemini yapan fonksiyon
+private fun takePhoto(
+    imageCapture: ImageCapture,
+    context: Context,
+    onImageCaptured: (Uri) -> Unit,
+    onError: (ImageCaptureException) -> Unit
+) {
+    val photoFile = File(
+        context.cacheDir, // Geçici olarak cache'e kaydediyoruz
+        "${System.currentTimeMillis()}.jpg"
+    )
+
+    val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+    imageCapture.takePicture(
+        outputOptions,
+        ContextCompat.getMainExecutor(context),
+        object : ImageCapture.OnImageSavedCallback {
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                val savedUri = Uri.fromFile(photoFile)
+                onImageCaptured(savedUri)
+            }
+
+            override fun onError(exception: ImageCaptureException) {
+                onError(exception)
+            }
+        }
+    )
+}
+
+/*kamera açıldığında çalışacak yapı*/
+@Composable
+fun CameraView(
+    onImageCaptured: (Uri) -> Unit,
+    onError: (ImageCaptureException) -> Unit
+) {
+    val context = LocalContext.current
+    val lensFacing = CameraSelector.LENS_FACING_BACK
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    val preview = androidx.camera.core.Preview.Builder().build()
+    val previewView = remember { PreviewView(context) }
+    val imageCapture: ImageCapture = remember { ImageCapture.Builder().build() }
+    val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+
+    // Kamera başlatma işlemi
+    LaunchedEffect(lensFacing) {
+        val cameraProvider = context.getCameraProvider() // Yardımcı fonksiyon yukarıda
+        cameraProvider.unbindAll()
+        cameraProvider.bindToLifecycle(
+            lifecycleOwner,
+            cameraSelector,
+            preview,
+            imageCapture
+        )
+        preview.setSurfaceProvider(previewView.surfaceProvider)
+    }
+
+    Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
+        // Canlı Kamera Görüntüsü
+        AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
+
+        // Fotoğraf Çekme Butonu
+        Button(
+            modifier = Modifier.padding(bottom = 50.dp),
+            onClick = {
+                takePhoto(
+                    imageCapture = imageCapture,
+                    context = context,
+                    onImageCaptured = onImageCaptured,
+                    onError = onError
+                )
+            }
+        ) {
+            Text("Fotoğrafı Çek")
+        }
+    }
+}
+
+
+/* uri'yi alıp byte'a çeviriyoruz 1 ve 0'lara çeviriyoruz */
+fun resizeImage(context: Context, uri: Uri, maxWidth: Int, maxHeight: Int) : ByteArray? {
+
+    return try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        val originalBitmap = BitmapFactory.decodeStream(inputStream)
+
+        val ratio =
+            originalBitmap.width.toFloat() / originalBitmap.height.toFloat() //width: 300 height:100 diyelim ratio = 3
+        var width = maxWidth //width 150'ye düşecekse height da mantıken 50'ye düşmeli
+        var height = (width / ratio).toInt() //150 / 3 = 50 (yani doğru oranda resim küçültülüyor)
+
+        //Height değerimiz maxHeight'dan büyükse küçültmemiz gerekiyor.
+        if (height > maxHeight) { //height: 50 > maxHeight: 40
+            height = maxHeight //height = 40
+            width =
+                (height * ratio).toInt() // 40*3 = 120 (yani ratio ile orantılı olarak width değerini de büyüttük)
+        }
+
+        //küçültülmüş bitmap yani
+        val resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, width, height, false)
+
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        byteArrayOutputStream.toByteArray() //bunu return edebiliriz veya return try içinde alabiliriz
+    }
+    catch (e: Exception)
+    {
+        e.printStackTrace()
+        null // null döndür.
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
