@@ -3,6 +3,7 @@ package com.yigitberk.pickstyle_2026p.screens
 import android.net.Uri
 import android.widget.EditText
 import androidx.collection.emptyObjectList
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -95,10 +96,10 @@ fun AddList(saveFunction: (item: Item) -> Unit){
         RadioButtonSingleSelection()
         Spacer(Modifier.size(20.dp))
 
-        Button(onClick = {
+        Button(border = BorderStroke(2.dp,MaterialTheme.colorScheme.surface),onClick = {
 
         }) {
-            Text("Save")
+            Text("Kaydet")
         }
 
     }
