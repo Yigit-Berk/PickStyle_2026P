@@ -2,6 +2,7 @@ package com.yigitberk.pickstyle_2026p.screens
 
 import android.net.Uri
 import android.widget.EditText
+import androidx.collection.emptyObjectList
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -18,6 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -91,6 +93,14 @@ fun AddList(saveFunction: (item: Item) -> Unit){
         )
         Spacer(Modifier.size(20.dp))
         RadioButtonSingleSelection()
+        Spacer(Modifier.size(20.dp))
+
+        Button(onClick = {
+
+        }) {
+            Text("Save")
+        }
+
     }
 }
 
@@ -116,7 +126,11 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
                     .height(56.dp)
                     .selectable(
                         selected = (text == selectedOption),
-                        onClick = { onOptionSelected(text) },
+                        onClick = {
+                            onOptionSelected(text)
+                            categoryName.value = text //remember
+                            println("Seçilen RadioButton: " + categoryName.value)
+                                  },
                         role = Role.RadioButton
                     )
                     .padding(horizontal = 16.dp),
@@ -124,8 +138,9 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
             ) {
                 RadioButton(
                     selected = (text == selectedOption),
-                    onClick = {
-                        categoryName.value = text //seçimi hatırla
+                    onClick = { onOptionSelected(text)
+                        categoryName.value = text //remember
+                        println("Seçilen RadioButton: " + categoryName.value)
                               }, // null recommended for accessibility with screen readers
                     colors = RadioButtonColors(
                         MaterialTheme.colorScheme.secondary,
@@ -149,6 +164,6 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
 @Composable
 fun Preview() {
     PickStyle_2026PTheme {
-        AddList()
+        //AddList()
     }
 }

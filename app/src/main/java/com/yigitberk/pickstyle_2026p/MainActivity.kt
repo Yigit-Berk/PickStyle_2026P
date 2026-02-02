@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.yigitberk.pickstyle_2026p.screens.AddList
 import com.yigitberk.pickstyle_2026p.screens.StyleList
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 import com.yigitberk.pickstyle_2026p.viewmodel.ItemViewModel
@@ -61,10 +62,13 @@ class MainActivity : ComponentActivity() {
                                 StyleList(itemList, navController)
 
                             }
-
                             /*ikinci ekleme ekranımız*/
                             composable ("Add_Style_Screen"){
-
+                                AddList {item ->
+                                    //item'ı save et ve list_screen'e dön
+                                    viewModel.saveItem(item)
+                                    navController.navigate("ListStyleName")
+                                }
                             }
                         }
 
