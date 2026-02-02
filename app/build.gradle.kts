@@ -76,4 +76,11 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.10.0")
     // Lifecycle utilities for Compose
     implementation("io.coil-kt:coil-compose:2.7.0")
+
+    /*--Camera X--*/
+    val cameraxVersion = "1.3.0"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,12 +38,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.yigitberk.pickstyle_2026p.R
 import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
@@ -72,11 +75,16 @@ fun AddList(saveFunction: (item: Item) -> Unit){
             "Stilini çekmek için dokun",
             color = MaterialTheme.colorScheme.surface
         )
+        /*Camera X ve kontroller*/
+        /* //Demo
         Image(
             contentDescription = "Fotoğraf Çek",
             painter = painterResource(R.drawable.take_photo),
             modifier =  Modifier.border(5.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
         )
+         */
+        StyleCamera() //son hali
+
         Spacer(Modifier.size(20.dp))
         TextField(
             value = itemName.value,
@@ -157,6 +165,40 @@ fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
                 )
             }
         }
+    }
+}
+
+/*Camera X kontrolleri ve görünüm davranışları*/
+@Composable
+fun StyleCamera(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
+    // Çekilen fotoğrafın URI'sini burada tutacağız
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    // Kameranın açık olup olmadığını kontrol eden state
+    var showCamera by remember { mutableStateOf(false) }
+
+    if (showCamera) {
+        // (CameraPreview)
+    } else {
+            Image(
+                painter = if (capturedImageUri != null) {
+                    rememberAsyncImagePainter(capturedImageUri) // Çekilen fotoğraf
+                } else {
+                    painterResource(R.drawable.take_photo) // Varsayılan ikon
+                },
+                contentDescription = "Fotoğraf Çek",
+                modifier = Modifier
+                    .size(150.dp)
+                    .border(5.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
+                    .clickable {
+                        // Tıklanınca kamerayı aç
+                        showCamera = true
+                    },
+                contentScale = ContentScale.Crop
+            )
+
     }
 }
 
