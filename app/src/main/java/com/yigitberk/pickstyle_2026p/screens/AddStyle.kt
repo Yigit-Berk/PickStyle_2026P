@@ -77,12 +77,12 @@ import kotlin.coroutines.suspendCoroutine
 @Composable
 fun AddList(saveFunction: (item: Item) -> Unit){
 
-    //gelen veriyi hatırlamak için remember
+    //gelen veriyi hatırlamak ve işlemek için remember
     val itemName = remember {
-        mutableStateOf("")
+        mutableStateOf("(İsimsiz stil)")
     }
     val categoryName = remember {
-        mutableStateOf("")
+        mutableStateOf("(Kategori seçilmedi)")
     }
     //var photoToImageUri by remember { mutableStateOf<Uri?>(null) }
     var context = LocalContext.current
