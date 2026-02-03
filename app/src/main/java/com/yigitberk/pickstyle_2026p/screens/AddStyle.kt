@@ -45,6 +45,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,6 +68,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.yigitberk.pickstyle_2026p.R
 import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
+import okio.ByteString.Companion.toByteString
 import java.io.ByteArrayOutputStream
 import java.io.File
 import kotlin.coroutines.resume
@@ -127,7 +129,7 @@ fun AddList(saveFunction: (item: Item) -> Unit){
             )
         )
         Spacer(Modifier.size(20.dp))
-        RadioButtonSingleSelection()
+        RadioButtonSingleSelection(categoryName = categoryName)
         Spacer(Modifier.size(20.dp))
 
         Button(border = BorderStroke(2.dp,MaterialTheme.colorScheme.surface),onClick = {
@@ -151,6 +153,8 @@ fun AddList(saveFunction: (item: Item) -> Unit){
                 //image = ByteArray(1) //boş byte array
             )
             saveFunction(itemToInsert)
+            println("kayıt sonrası kategori değeri: " + categoryName.value)
+            println("kayıt sonrası image değeri: " + imageByteArray.toByteString() + " and \n" + imageByteArray.toString())
 
         }) {
             Text("Kaydet")
@@ -160,14 +164,20 @@ fun AddList(saveFunction: (item: Item) -> Unit){
 }
 
 @Composable
-fun RadioButtonSingleSelection(modifier: Modifier = Modifier) {
-    var categoryName = remember {
-        mutableStateOf("")
-    }
+fun RadioButtonSingleSelection(
+    modifier: Modifier = Modifier,
+    categoryName: MutableState<String>
+) {
+
+    //val categoryName = remember { mutableStateOf("") }
 
     //Kategoriler
     val radioOptions = listOf("Gündelik","Sportif", "İş","Tatil","Minimalist")
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+
+    val (selectedOption, onOptionSelected) = remember {
+        mutableStateOf(radioOptions[0])
+    }
+
     // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
     Column(
         modifier.selectableGroup()
