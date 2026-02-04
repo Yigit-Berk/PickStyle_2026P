@@ -1,5 +1,6 @@
 package com.yigitberk.pickstyle_2026p.screens
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,7 +26,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontStyle
@@ -37,7 +41,7 @@ import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 @Composable
-fun ListSavedStyle(item: Item) {
+fun ListSavedStyle(item: Item?) {
     Column(
         modifier = Modifier.fillMaxSize().
         background(MaterialTheme.colorScheme.primary),
@@ -51,21 +55,24 @@ fun ListSavedStyle(item: Item) {
             textDecoration = TextDecoration.Underline
         )
         Spacer(Modifier.size(10.dp))
+        val imageBitmap = item?.image?.let { byteArray ->
+            BitmapFactory.decodeByteArray(byteArray,0,byteArray.size)?.asImageBitmap()
+        }
         Image(
-            contentDescription = "Fotoğraf Çek",
-            painter = painterResource(R.drawable.take_photo),
+            contentDescription = "Kayıtlı Stil : " + item?.itemName,
+            bitmap = imageBitmap ?: ImageBitmap.imageResource(R.drawable.take_photo),
             modifier =  Modifier.border(5.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
                 .size(300.dp,400.dp)
         )
         Spacer(Modifier.size(20.dp))
         Text(
-            "Gece Kuşu",
+            text = item?.itemName ?: "(Stil Adı Bulunamadı)",
             color = MaterialTheme.colorScheme.surface,
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(Modifier.size(10.dp))
         Text(
-            "Spor",
+             text = item?.category ?: "(Stil Kategorisi Bulunamadı)",
             color = MaterialTheme.colorScheme.surface,
             style = MaterialTheme.typography.titleMedium
         )
