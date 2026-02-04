@@ -23,10 +23,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.yigitberk.pickstyle_2026p.screens.AddList
+import com.yigitberk.pickstyle_2026p.screens.ListSavedStyle
 import com.yigitberk.pickstyle_2026p.screens.StyleList
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 import com.yigitberk.pickstyle_2026p.viewmodel.ItemViewModel
@@ -69,6 +72,28 @@ class MainActivity : ComponentActivity() {
                                     viewModel.saveItem(item)
                                     navController.navigate("ListStyleName")
                                 }
+                            }
+                            // üçüncü görüntüleme ekranımız
+                            //tıklanana göre açılan ekranda verileri görüntüler
+                            composable(
+                                "Check_Saved/{itemId}",
+                                arguments = listOf(
+                                    navArgument("itemId"){
+                                    type = NavType.StringType })
+                                )
+                            {
+                                val itemIdString =remember { //id'yi hatırla
+                                    it.arguments?.getString("itemId")
+                                }
+                                viewModel.getItem(itemIdString?.toIntOrNull() ?: 1) // bize selected'ı döndürür
+
+                                //dönen değeri remember ile alırız
+                                val selectedItem by remember {
+                                    viewModel.selectedItem
+                                }
+
+                                ListSavedStyle(item = selectedItem)
+
                             }
                         }
 

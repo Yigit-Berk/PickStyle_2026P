@@ -33,10 +33,11 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yigitberk.pickstyle_2026p.R
+import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 @Composable
-fun ListSavedStyle() {
+fun ListSavedStyle(item: Item) {
     Column(
         modifier = Modifier.fillMaxSize().
         background(MaterialTheme.colorScheme.primary),
@@ -104,6 +105,6 @@ fun ListSavedStyle() {
 @Composable
 fun PreviewStyle() {
     PickStyle_2026PTheme {
-        ListSavedStyle()
+        //ListSavedStyle(null)
     }
 }
