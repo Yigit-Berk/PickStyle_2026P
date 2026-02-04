@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.yigitberk.pickstyle_2026p.R
@@ -44,14 +46,10 @@ fun ListSavedStyle() {
         Text(
             "Stilim",
             color = MaterialTheme.colorScheme.surface ,
-            style = MaterialTheme.typography.displayMedium
+            style = MaterialTheme.typography.displaySmall,
+            textDecoration = TextDecoration.Underline
         )
         Spacer(Modifier.size(10.dp))
-        Text(
-            "(Gece Kuşu)",
-            color = MaterialTheme.colorScheme.surface
-        )
-        Spacer(Modifier.size(20.dp))
         Image(
             contentDescription = "Fotoğraf Çek",
             painter = painterResource(R.drawable.take_photo),
@@ -59,6 +57,18 @@ fun ListSavedStyle() {
                 .size(300.dp,400.dp)
         )
         Spacer(Modifier.size(20.dp))
+        Text(
+            "Gece Kuşu",
+            color = MaterialTheme.colorScheme.surface,
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(Modifier.size(10.dp))
+        Text(
+            "Spor",
+            color = MaterialTheme.colorScheme.surface,
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(Modifier.size(10.dp))
         Button(onClick = {
             //yukarıda oluşturduğumuz selectedImage değişkenimiz
             //bize bir context lazım olacağı (fonksiyonumuz resizeImage için) için yine yukarıda tanımladık
