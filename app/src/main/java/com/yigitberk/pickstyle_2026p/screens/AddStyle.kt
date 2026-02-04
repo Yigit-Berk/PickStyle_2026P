@@ -263,7 +263,7 @@ fun StyleCamera(
     } else {
             Image(
                 painter = if (capturedImageUri.value != null) {
-                    rememberAsyncImagePainter(capturedImageUri) // Çekilen fotoğraf
+                    rememberAsyncImagePainter(capturedImageUri.value) // Çekilen fotoğraf
                 } else {
                     painterResource(R.drawable.take_photo) // Varsayılan ikon
                 },
