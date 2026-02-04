@@ -190,9 +190,10 @@ fun RadioButtonSingleSelection(
                     .fillMaxWidth()
                     .height(56.dp)
                     .selectable(
+                        //selected true ise radiobutton içi dolu olur
                         selected = (text == selectedOption),
                         onClick = {
-                            onOptionSelected(text)
+                            onOptionSelected(text)//"seçili olan artık bu text değeridir" diye bildirir
                             categoryName.value = text //remember
                             println("Seçilen RadioButton: " + categoryName.value)
                                   },
@@ -203,7 +204,7 @@ fun RadioButtonSingleSelection(
             ) {
                 RadioButton(
                     selected = (text == selectedOption),
-                    onClick = { onOptionSelected(text)
+                    onClick = { onOptionSelected(text) //"seçili olan artık bu text değeridir" diye bildirir
                         categoryName.value = text //remember
                         println("Seçilen RadioButton: " + categoryName.value)
                               }, // null recommended for accessibility with screen readers
@@ -309,6 +310,7 @@ private fun takePhoto(
 
     val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
+    //camera x: takePicture
     imageCapture.takePicture(
         outputOptions,
         ContextCompat.getMainExecutor(context),
@@ -332,27 +334,28 @@ fun CameraView(
     onError: (ImageCaptureException) -> Unit
 ) {
     val context = LocalContext.current
-    val lensFacing = CameraSelector.LENS_FACING_BACK
+    val lensFacing = CameraSelector.LENS_FACING_BACK //arka kamera seçilir
     val lifecycleOwner = LocalLifecycleOwner.current
 
-    val preview = androidx.camera.core.Preview.Builder().build()
+    val preview = androidx.camera.core.Preview.Builder().build() //görüntüyü önizleme için
     val previewView = remember { PreviewView(context) }
-    val imageCapture: ImageCapture = remember { ImageCapture.Builder().build() }
-    val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+    val imageCapture: ImageCapture = remember { ImageCapture.Builder().build() } //denklanşör + dosyaya yazma için
+    val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build() //arka  veya ön kamera için
 
     // Kamera başlatma işlemi
     LaunchedEffect(lensFacing) {
         val cameraProvider = context.getCameraProvider() // Yardımcı fonksiyon yukarıda
-        cameraProvider.unbindAll()
-        cameraProvider.bindToLifecycle(
+        cameraProvider.unbindAll() // Önceki kamera oturumlarını temizler
+        cameraProvider.bindToLifecycle( //Kamerayı içinde bulunduğu lifecycle'a bağlar. Ekran kapandığında kamera otomatik olarak durur(pil optimizasyonu)
             lifecycleOwner,
             cameraSelector,
             preview,
             imageCapture
         )
-        preview.setSurfaceProvider(previewView.surfaceProvider)
+        preview.setSurfaceProvider(previewView.surfaceProvider) //preview için bir surface ayarlar (kullanıcı canlı olarak kameranın ne gördüğünü görür)
     }
 
+    // Kamera UI
     Box(contentAlignment = Alignment.BottomCenter, modifier = Modifier.fillMaxSize()) {
         // Canlı Kamera Görüntüsü
         AndroidView({ previewView }, modifier = Modifier.fillMaxSize())
