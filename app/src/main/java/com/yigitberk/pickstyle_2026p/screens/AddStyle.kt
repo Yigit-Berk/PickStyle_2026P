@@ -88,7 +88,9 @@ fun AddList(saveFunction: (item: Item) -> Unit){
     var context = LocalContext.current
 
     // Çekilen fotoğrafın URI'sini burada tutacağız
-    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var capturedImageUri = remember {
+        mutableStateOf<Uri?>(null)
+    }
 
     Column(
         modifier = Modifier.fillMaxSize().
@@ -108,7 +110,7 @@ fun AddList(saveFunction: (item: Item) -> Unit){
             modifier =  Modifier.border(5.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
         )
          */
-        StyleCamera() //son hali
+        StyleCamera(capturedImageUri = capturedImageUri) //son hali
 
         Spacer(Modifier.size(20.dp))
         TextField(
@@ -136,7 +138,7 @@ fun AddList(saveFunction: (item: Item) -> Unit){
 
             //yukarıda oluşturduğumuz selectedImage değişkenimiz
             //bize bir context lazım olacağı (fonksiyonumuz resizeImage için) için yine yukarıda tanımladık
-            val imageByteArray = capturedImageUri?.let {
+            val imageByteArray = capturedImageUri.value?.let {
                 resizeImage(
                     context = context,
                     uri = it,
@@ -227,11 +229,14 @@ fun RadioButtonSingleSelection(
 
 /*Camera X kontrolleri ve görünüm davranışları*/
 @Composable
-fun StyleCamera(modifier: Modifier = Modifier) {
+fun StyleCamera(
+    capturedImageUri : MutableState<Uri?>,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
 
     // Çekilen fotoğrafın URI'sini burada tutacağız
-    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+    //var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Kameranın açık olup olmadığını kontrol eden state
     var showCamera by remember { mutableStateOf(false) }
@@ -250,14 +255,14 @@ fun StyleCamera(modifier: Modifier = Modifier) {
     if (showCamera) {
         CameraView(
             onImageCaptured = {uri ->
-                capturedImageUri = uri
+                capturedImageUri.value = uri
                 showCamera = false //fotoğraf çekilince kamerayı kapat
             },
             onError = { Log.e("Camera","Hata: ${it.message}")}
         )
     } else {
             Image(
-                painter = if (capturedImageUri != null) {
+                painter = if (capturedImageUri.value != null) {
                     rememberAsyncImagePainter(capturedImageUri) // Çekilen fotoğraf
                 } else {
                     painterResource(R.drawable.take_photo) // Varsayılan ikon
