@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -93,8 +94,9 @@ fun AddList(saveFunction: (item: Item) -> Unit){
     }
 
     Column(
-        modifier = Modifier.fillMaxSize().
-        background(MaterialTheme.colorScheme.primary),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -155,6 +157,7 @@ fun AddList(saveFunction: (item: Item) -> Unit){
                 //image = ByteArray(1) //boş byte array
             )
             saveFunction(itemToInsert)
+            Toast.makeText(context, "Stil Eklendi", Toast.LENGTH_LONG).show()
             println("kayıt sonrası kategori değeri: " + categoryName.value)
             println("kayıt sonrası image değeri: " + imageByteArray.toByteString() + " and \n" + imageByteArray.toString())
 
@@ -182,8 +185,9 @@ fun RadioButtonSingleSelection(
 
     // Note that Modifier.selectableGroup() is essential to ensure correct accessibility behavior
     Column(
-        modifier.selectableGroup()
-        .padding(60.dp,20.dp)
+        modifier
+            .selectableGroup()
+            .padding(60.dp, 20.dp)
             .border(2.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
     ) {
         radioOptions.forEach { text ->
@@ -198,7 +202,7 @@ fun RadioButtonSingleSelection(
                             onOptionSelected(text)//"seçili olan artık bu text değeridir" diye bildirir
                             categoryName.value = text //remember
                             println("Seçilen RadioButton: " + categoryName.value)
-                                  },
+                        },
                         role = Role.RadioButton
                     )
                     .padding(horizontal = 16.dp),

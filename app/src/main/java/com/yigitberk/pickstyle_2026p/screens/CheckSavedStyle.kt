@@ -1,6 +1,7 @@
 package com.yigitberk.pickstyle_2026p.screens
 
 import android.graphics.BitmapFactory
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
@@ -36,15 +38,18 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yigitberk.pickstyle_2026p.MainActivity
 import com.yigitberk.pickstyle_2026p.R
 import com.yigitberk.pickstyle_2026p.model.Item
 import com.yigitberk.pickstyle_2026p.ui.theme.PickStyle_2026PTheme
 
 @Composable
-fun ListSavedStyle(item: Item?) {
+fun ListSavedStyle(item: Item?, deleteFunction: () -> Unit) {
+    val context = LocalContext.current
     Column(
-        modifier = Modifier.fillMaxSize().
-        background(MaterialTheme.colorScheme.primary),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ){
@@ -61,8 +66,9 @@ fun ListSavedStyle(item: Item?) {
         Image(
             contentDescription = "Kayıtlı Stil : " + item?.itemName,
             bitmap = imageBitmap ?: ImageBitmap.imageResource(R.drawable.take_photo),
-            modifier =  Modifier.border(5.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
-                .size(300.dp,400.dp)
+            modifier =  Modifier
+                .border(5.dp, MaterialTheme.colorScheme.surface, shape = RectangleShape)
+                .size(300.dp, 400.dp)
         )
         Spacer(Modifier.size(20.dp))
         Text(
@@ -78,18 +84,8 @@ fun ListSavedStyle(item: Item?) {
         )
         Spacer(Modifier.size(10.dp))
         Button(onClick = {
-            //yukarıda oluşturduğumuz selectedImage değişkenimiz
-            //bize bir context lazım olacağı (fonksiyonumuz resizeImage için) için yine yukarıda tanımladık
-            /*
-            val itemToInsert = Item(
-                itemName = itemName.value,
-                storeName = storeName.value,
-                price = price.value,
-                image = imageByteArray //değişkenimizi verdik boş byteArray yerine
-                //image = ByteArray(1) //boş byte array
-            )
-            saveFunction(itemToInsert)
-             */
+            deleteFunction()
+            Toast.makeText(context, "Stil silindi", Toast.LENGTH_LONG).show()
         },
             Modifier.padding(20.dp),
             colors = ButtonColors(

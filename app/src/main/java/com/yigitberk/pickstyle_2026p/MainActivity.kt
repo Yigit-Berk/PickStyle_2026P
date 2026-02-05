@@ -3,6 +3,7 @@ package com.yigitberk.pickstyle_2026p
 import android.R
 import android.graphics.Paint
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -21,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
@@ -92,7 +94,10 @@ class MainActivity : ComponentActivity() {
                                     viewModel.selectedItem
                                 }
 
-                                ListSavedStyle(item = selectedItem)
+                                ListSavedStyle(item = selectedItem){
+                                    viewModel.deleteItem(selectedItem)
+                                    navController.navigate("ListStyleName")
+                                }
 
                             }
                         }
