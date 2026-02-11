@@ -30,7 +30,8 @@ Listeden yapılan seçime göre kullanıcı CheckSavedStyle ekranına yönlendir
 Bu ekranda ise kullanıcının kaydettiği stil detaylarıyla birlikte görüntülenir.
 (Görsel Örnek Amaçlıdır gerçek bir Android 10 cihazında test edilmiştir. En boy oranlarında sorunlar yaşanmamaktadır.) 
 
-![picture30](https://github.com/user-attachments/assets/62d19bc0-576b-43aa-a63e-ee5b872f0416)
+![picture30](https://github.com/user-attachments/assets/2936191c-7e0d-41e0-91c5-54dd275d02ff)
+
 
 
 
